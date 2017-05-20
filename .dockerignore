@@ -1,0 +1,28 @@
+.dockerignore  # check and see if this is excluded by default
+.git
+.gitignore
+.log
+tmp
+
+# I usually have a docker directory with Dockerfiles and scripts
+docker
+
+# Mix artifacts
+_build
+deps
+*.ez
+
+# we're going to store our releases in the releases directory, we don't need to copy these files into the container
+releases
+
+# Generate on crash by the VM
+erl_crash.dump
+
+# Static artifacts if you're using Phoenix if it's an umbrella app change the paths
+node_modules
+priv
+
+# any other directories that have files that don't need to be included in the build
+# these are specific to the sample project
+docs
+mix.lock
