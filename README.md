@@ -73,7 +73,7 @@ Basic steps
 19. Now, if you have setup everything correctly you should be able to load the main site URL and it will proxy to the Phoenix app.
 
 
-## Bonus #1: Lets add a schema change and some code cahnges and deploy an update to production
+## Bonus #1: Lets add a schema change and some code changes and deploy an update to production
 1. Let's stert building a [blog](https://monterail.com/blog/2015/phoenix-blog) 
 2. Let's add posts to our app: `mix phoenix.gen.html Post posts title:string body:text`
 3. Add `resources "/posts", PostController` to `./web/router.ex`
