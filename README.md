@@ -14,16 +14,16 @@ Basic steps
 	* Create user and install postgresql, nginx on the Production Host Server
 	* Create the database and nginx config to proxy (e.g. external port 80/443 to port 4000 on localhost) on the Production Host Server
 	* Setup [public key authentication for ssh](https://help.ubuntu.com/community/SSH/OpenSSH/Keys) on the Production Host Server
-* clone this repo
+2. clone this repo
 
 	```
 	git clone https://github.com/appdojolabs/myapp.git
 	```
-* Enter the app project directory `cd myapp`
-* setup npm: `npm install`
-* Get dependencies: `mix deps.get`
-* Generate a new Phoenix secret: `mix phoenix.gen.secret`
-* Create a prod.secret.exs file and replace "`some_secret`" in `./config/prod.secret.exs` with the value that was generated (note: this file is not stored in the git repo) 
+3. Enter the app project directory `cd myapp`
+4. setup npm: `npm install`
+5. Get dependencies: `mix deps.get`
+6. Generate a new Phoenix secret: `mix phoenix.gen.secret`
+7. Create a prod.secret.exs file and replace "`some_secret`" in `./config/prod.secret.exs` with the value that was generated (note: this file is not stored in the git repo) 
 
 	```
 	use Mix.Config
@@ -47,19 +47,19 @@ Basic steps
 	  database: "myapp_prod",
 	  pool_size: 20
 	```
-* Replace "`PRODUCTION_HOSTS`" in file `./.deliver/config` with the actual hostname or IP address of your production host
-* Copy your public ssh key (ideally you should create new pair just for build and deployment)
+8. Replace "`PRODUCTION_HOSTS`" in file `./.deliver/config` with the actual hostname or IP address of your production host
+9. Copy your public ssh key (ideally you should create new pair just for build and deployment)
 	```
 	cp ~/.ssh/id_rsa.pub ./config/ssh_key.pub
 	```
-* Try running the app locally: `mix phoenix.server`
-* Stop the server (control-c; control-c)
-* Build the docker image: `docker build --tag=elixir-build -f docker/Dockerfile .`
-* Run the docker image: `docker run -d -p 22:22 -P --name elixir-build elixir-build`
-* Check that you can ssh into the docker image: `ssh localhost`
-* You should also check that you can ssh into the Production Host Server
-* Build a release for production: `mix edeliver build release`
-* Deploy the build to the Production Host: `mix edeliver deploy release to production`
+10. Try running the app locally: `mix phoenix.server`
+11. Stop the server (control-c; control-c)
+12. Build the docker image: `docker build --tag=elixir-build -f docker/Dockerfile .`
+13. Run the docker image: `docker run -d -p 22:22 -P --name elixir-build elixir-build`
+14. Check that you can ssh into the docker image: `ssh localhost`
+15. You should also check that you can ssh into the Production Host Server
+16. Build a release for production: `mix edeliver build release`
+17. Deploy the build to the Production Host: `mix edeliver deploy release to production`
 	* Note: If you are presented with multiple releases, you need to type the version number of the release that you want to deploy then press [return]
 	
 		```
@@ -69,14 +69,14 @@ Basic steps
 		Enter Version:
 		```
 		Type: `0.0.1+10-71f22f0`
-* Start the Phoenix app on the Production Host: `mix edeliver start production`
-* Now, if you have setup everything correctly you should be able to load the main site URL and it will proxy to the Phoenix app.
+18. Start the Phoenix app on the Production Host: `mix edeliver start production`
+19. Now, if you have setup everything correctly you should be able to load the main site URL and it will proxy to the Phoenix app.
 
 
 ## Bonus #1: Lets add a schema change and some code cahnges and deploy an update to production
 1. Let's stert building a [blog](https://monterail.com/blog/2015/phoenix-blog) 
-* Let's add posts to our app: `mix phoenix.gen.html Post posts title:string body:text`
-* Add `resources "/posts", PostController` to `./web/router.ex`
+2. Let's add posts to our app: `mix phoenix.gen.html Post posts title:string body:text`
+3. Add `resources "/posts", PostController` to `./web/router.ex`
 		
 			...
 			scope "/", Myapp do
@@ -89,10 +89,10 @@ Basic steps
 	  		...
 	   		
 4. Let's test locally--start updating the routes: `mix phoenix.routes`
-* The apply the schema change: `mix ecto.migrate`
-* Test locally `mix phoenix.server`
-* Now you should be able open this URL in a web browser:  [http://localhost:4000/posts](http://localhost:4000/posts)
-* If everything looks good (no errors, and you see a posts page) Commit the changes
+5. The apply the schema change: `mix ecto.migrate`
+6. Test locally `mix phoenix.server`
+7. Now you should be able open this URL in a web browser:  [http://localhost:4000/posts](http://localhost:4000/posts)
+8. If everything looks good (no errors, and you see a posts page) Commit the changes
  	
 		git add .
 		git commit
@@ -121,15 +121,15 @@ Basic steps
 		RELEASE BUILD OF MYAPP WAS SUCCESSFUL!
 
 10. Stop the production host: `mix edeliver stop production`
-* Deploy the release--Look for the release number from the output above--look for "Copying release 0.0.1+2-fdd847a ..." then use that version number in the edeliver deploy command: `mix edeliver deploy release to production --version=0.0.1+2-fdd847`
-* Start the production host: `mix edeliver start production`	
-* Run the database migration on the production host: `mix edeliver migrate production`
-* Now you should be able to open the production posts URL in a web browser using this URL: "[http://myapp.com/posts](http://localhost:4000/posts)" (of course you need to change the hostname to be the IP or hostname you are using in production.
+11. Deploy the release--Look for the release number from the output above--look for "Copying release 0.0.1+2-fdd847a ..." then use that version number in the edeliver deploy command: `mix edeliver deploy release to production --version=0.0.1+2-fdd847`
+12. Start the production host: `mix edeliver start production`	
+13. Run the database migration on the production host: `mix edeliver migrate production`
+14. Now you should be able to open the production posts URL in a web browser using this URL: "[http://myapp.com/posts](http://localhost:4000/posts)" (of course you need to change the hostname to be the IP or hostname you are using in production.
 
 ## Bonus #2: build and deploy and live upgrade
 1. Make a change and commit the change
-* Make some change in your project--for example, edit the file: `./web/templates/page/index/hitml/eex` and change "Welcome to Phoenix!" to "Welcome to Myapp!"
-* Commit the changes
+2. Make some change in your project--for example, edit the file: `./web/templates/page/index/hitml/eex` and change "Welcome to Phoenix!" to "Welcome to Myapp!"
+3. Commit the changes
  
 		git add .
 		git commit
@@ -152,9 +152,9 @@ Basic steps
 		            ...
 		
 		VERSION DONE!
-* Use the version listed to the right of "response:" and create an upgrade: `mix edeliver build upgrade --with=0.0.1+2-fdd847a`
-* Deploy the upgrade to production: `mix edeliver deploy upgrade to production`
-* Now try to load the main page--you shoudl see "Welcome to Myapp!": [http://myapp.com](http://myapp.com)
+5. Use the version listed to the right of "response:" and create an upgrade: `mix edeliver build upgrade --with=0.0.1+2-fdd847a`
+6. Deploy the upgrade to production: `mix edeliver deploy upgrade to production`
+7. Now try to load the main page--you shoudl see "Welcome to Myapp!": [http://myapp.com](http://myapp.com)
 
 ## Development Mac Config Recommended Setup
 * Develop on a Mac
