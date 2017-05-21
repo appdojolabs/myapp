@@ -154,7 +154,7 @@ Basic steps
 		VERSION DONE!
 5. Use the version listed to the right of "response:" and create an upgrade: `mix edeliver build upgrade --with=0.0.1+2-fdd847a`
 6. Deploy the upgrade to production: `mix edeliver deploy upgrade to production`
-7. Now try to load the main page--you shoudl see "Welcome to Myapp!": [http://myapp.com](http://myapp.com)
+7. Now try to load the main page--you should now see "Welcome to Myapp!": [http://myapp.com](http://myapp.com)
 
 ## Development Mac Config Recommended Setup
 * Develop on a Mac
