@@ -1,0 +1,81 @@
+# Allow build host override, for Docker setup
+#if [ -z "$EDELIVER_BUILDHOST" ]; then
+#  BUILD_HOST="localhost"
+#else
+#  BUILD_HOST=$EDELIVER_BUILDHOST
+#fi
+
+AUTO_VERSION=commit-count+git-revision+branch-unless-master
+APP="myapp"
+BUILD_CMD=mix
+RELEASE_CMD=mix
+USING_DISTILLERY=true
+
+BUILD_HOST="localhost"
+BUILD_USER="builder"
+BUILD_AT="/tmp/edeliver/myapp/builds"
+RELEASE_DIR="/tmp/edeliver/myapp/builds/rel/myapp"
+
+
+STAGING_HOSTS="stage.myapp.com"
+STAGING_USER="web"
+DELIVER_TO="/home/web"
+
+PRODUCTION_HOSTS="myapp.com" # deploy / production hosts separated by space
+PRODUCTION_USER="elixir_user" # local user at deploy hosts
+DELIVER_TO="/opt/elixir" # deploy directory on production hosts
+
+# For *Phoenix* projects, symlink prod.secret.exs to our tmp source
+pre_erlang_get_and_update_deps() {
+
+
+   status "Linking to prod.secret.exs replacement config"
+   local _prod_secret_path="/home/builder/config/prod.secret.exs"
+   
+   if [ "$TARGET_MIX_ENV" = "prod" ]; then
+   	  status "Linking to prod.secret.exs replacement config: TARGET_MIX_ENV=prod"
+   	  set output_dir: "rel/myapp"
+      __sync_remote "
+         ln -sfn '$_prod_secret_path' '$BUILD_AT/config/prod.secret.exs'
+      "
+   fi
+}
+
+pre_erlang_clean_compile() {
+ status "Installing nodejs dependencies"
+ __sync_remote "
+   [ -f ~/.profile ] && source ~/.profile
+   set -e
+   cd '$BUILD_AT'
+
+   APP='$APP' MIX_ENV='$TARGET_MIX_ENV' npm install
+ "
+
+ status "Building static assets"
+ __sync_remote "
+   [ -f ~/.profile ] && source ~/.profile
+   set -e
+   cd '$BUILD_AT'
+
+   mkdir -p priv/static
+   APP='$APP' MIX_ENV='$TARGET_MIX_ENV' npm run deploy
+ "
+
+ status "Compiling code"
+ __sync_remote "
+   [ -f ~/.profile ] && source ~/.profile
+   set -e #
+   cd '$BUILD_AT'
+
+   APP='$APP' MIX_ENV='$TARGET_MIX_ENV' $MIX_CMD do deps.get, compile
+ "
+
+ status "Running phoenix.digest"
+ __sync_remote "
+   [ -f ~/.profile ] && source ~/.profile
+   set -e #
+   cd '$BUILD_AT'
+
+   APP='$APP' MIX_ENV='$TARGET_MIX_ENV' $MIX_CMD phoenix.digest $SILENCE
+ "
+}
