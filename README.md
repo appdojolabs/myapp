@@ -186,7 +186,7 @@ Host myapp.com
 * Install Phoenix using the [Installation Instructions](http://www.phoenixframework.org/docs/installation)
 
 ## Production Host Server Recommended Setup
-You should use something like [Ansible](http://docs.ansible.com/ansible/intro_getting_started.html) of [Fabric](http://www.fabfile.org) to perform all server config (you should not ssh into your server and make these changes)--Here are the key operations:
+You should use something like [Ansible](http://docs.ansible.com/ansible/intro_getting_started.html) or [Fabric](http://www.fabfile.org) to perform all server config (you should not ssh into your server and make these changes)--Here are the key operations:
 
 * Create a user to run the elixir app on the production server (e.g. elixir_user)
 	* Ensure that the user has read/write access to the deployment directory on the server in this example that is /opt/elixir  (see 'DELIVER_TO' in `./.deliver/config`)
