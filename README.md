@@ -5,7 +5,7 @@ Basic steps
 -Develop locally on a Mac
 -Use edeliver + distillery to build a release inside a docker image (this docker image should be as close a match as possible to your production deployemnt OS 
 -Use edeliver to deploy to production
--Note: wherever you see myapp.com, you shoudl replace whtat with your production hostname or IP address
+-Note: wherever you see myapp.com, you should replace that with your production hostname or IP address
 
 ## Step By Step
 1. Perform Dev Mac Config Setup and Production Server Setup (see sections below)
